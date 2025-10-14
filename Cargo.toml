@@ -1,0 +1,39 @@
+[package]
+name = "habbits"
+version = "0.1.0"
+authors = ["ToastXC <100072983+toastxc@users.noreply.github.com>"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+chrono = { version = "0.4.42", optional = true }
+dioxus = { version = "0.6.0", features = ["router", "fullstack"] }
+dioxus-free-icons = { version = "0.9.0", features = ["font-awesome-solid"] }
+lazy_static = { version = "1.5.0", optional = true }
+rand = { version = "0.9.2", optional = true }
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.145"
+time = "0.3.44"
+tokio = { version = "1.47.1", features = ["full"], optional = true }
+
+
+[features]
+default = []
+web = ["dioxus/web"]
+desktop = ["dioxus/desktop"]
+mobile = ["dioxus/mobile"]
+server = ["dep:tokio", "dioxus/server", "dep:lazy_static", "dep:rand", "dep:chrono"]
+
+
+[profile]
+
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = 1
+
+[profile.server-dev]
+inherits = "dev"
+
+[profile.android-dev]
+inherits = "dev"
