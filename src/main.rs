@@ -6,7 +6,7 @@ use dioxus::prelude::*;
 
 use pages::edit::Edit;
 use pages::login::Login;
-use pages::month::Month;
+// use pages::month::Month;
 use pages::signup::Signup;
 use pages::u::U;
 
@@ -22,8 +22,8 @@ enum Route {
     Login {},
     #[route("/u/:id")]
     U { id: u32 },
-    #[route("/u/:id/month")]
-    Month { id: u32 },
+    // #[route("/u/:id/month")]
+    // Month { id: u32 },
     #[route("/u/:id/edit")]
     Edit { id: u32 },
     #[route("/:..segments")]

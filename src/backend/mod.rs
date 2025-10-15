@@ -1,51 +1,33 @@
-pub mod entry;
-pub mod habit;
-pub mod time;
-pub mod user;
-use std::collections::{HashMap, HashSet};
 #[cfg(feature = "server")]
-use std::sync::Arc;
-#[cfg(feature = "server")]
-use std::sync::RwLock;
+pub mod db;
+pub mod middle;
 
-use dioxus::prelude::*;
-#[server]
-pub async fn db_save() -> Result<(), ServerFnError> {
-    let db = DB.read().unwrap().clone();
-    std::fs::write("db.json", serde_json::to_string(&db).unwrap());
-    Ok(())
-}
+use hashbrown::{HashMap, HashSet};
+use serde::{Deserialize, Serialize};
 
-#[cfg(feature = "server")]
-use lazy_static::lazy_static;
-#[cfg(feature = "server")]
-lazy_static! {
-    static ref EXAMPLE: u8 = 42;
-    static ref DB: Arc<RwLock<Data>> = Arc::new(RwLock::new(
-        match std::fs::read("db.json").map(|op| serde_json::from_slice(&op)) {
-            Ok(Ok(db)) => db,
-            _ => {
-                std::fs::write("db.json", serde_json::to_string(&Data::default()).unwrap());
-                Data::default()
-            }
-        }
-    ));
-}
-
-#[derive(Clone, Default, Deserialize, Serialize)]
-pub struct Data {
+#[derive(Clone, Default, Deserialize, Serialize, Debug)]
+pub struct DataSerde {
+    // user id | user data
     pub users: HashMap<u32, User>,
+    // user id habit id | habit data
+    pub habits: HashMap<u32, Habit>,
+    // habit id | entry id timestamp
+    pub entries: HashSet<(u32, u32)>,
 }
+
 #[derive(Clone, Default, Deserialize, Serialize, Debug)]
 
 pub struct User {
-    pub id: u32,
-    pub habits: HashMap<String, Habit>,
+    pub habits: HashSet<u32>,
 }
 #[derive(Clone, Default, Deserialize, Serialize, PartialEq, Debug)]
 pub struct Habit {
     pub name: String,
-    pub entries: HashSet<u32>,
 }
 
-use serde::{Deserialize, Serialize};
+#[derive(Clone, Default, Deserialize, Serialize, PartialEq, Debug)]
+pub struct DateInfo {
+    pub days_since_epoch: u32,
+    pub days_since_monday: u32,
+    pub start_of_this_week: u32,
+}

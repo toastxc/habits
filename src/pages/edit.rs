@@ -5,23 +5,26 @@ use dioxus_free_icons::{
 };
 
 use crate::{
-    backend::{habit::habit_delete, user::user_get},
+    backend::middle::{db_save, habit_delete, habits_get, user_get},
     Route,
 };
 
 #[component]
 pub fn Edit(id: u32) -> Element {
-    let Some(Some(user)) = use_resource(move || async move { user_get(id).await.unwrap() })
-        .read_unchecked()
-        .clone()
-    else {
+    let Some((Some(user), habits)) = use_resource(move || async move {
+        (user_get(id).await.unwrap(), habits_get(id).await.unwrap())
+    })
+    .read_unchecked()
+    .clone() else {
         return rsx! {
             h1 { "404" }
         };
     };
     let user = use_signal(|| user);
 
-    let rendered = user.read().clone().habits.into_keys().map(|name| {
+    let rendered = habits.into_iter().map(|(habit_id, habit)| {
+        let name = habit.name;
+
         rsx! {
 
             div { class: "boxes",
@@ -31,19 +34,14 @@ pub fn Edit(id: u32) -> Element {
 
                     p { class: "box", style: "justify-content: left;", "{name}" }
 
-
-                    //       Link { to: Route::U { id }, class: "box ", style:"width: 10%; margin-right:-5px;",
-                    //     Icon { icon: FaX }
-                    // }
-
                     a {
                         class: "box ",
                         style: "width: 10%; margin-right:-5px;",
                         onclick: move |_| {
-                            let name = name.clone();
                             async move {
-                                habit_delete(id, name.clone()).await.unwrap();
-                                user.clone().write().habits.remove(&name);
+                                habit_delete(habit_id, id).await.unwrap();
+                                user.clone().write().habits.remove(&habit_id);
+                                db_save().await.unwrap();
                             }
                         },
                         Icon { icon: FaX }

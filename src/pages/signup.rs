@@ -2,8 +2,8 @@ use dioxus::prelude::*;
 use dioxus_free_icons::{icons::fa_solid_icons::FaChevronRight, Icon};
 use std::ops::Deref;
 
-use crate::backend::db_save;
-use crate::backend::user::user_make;
+use crate::backend::middle::db_save;
+use crate::backend::middle::user_make;
 use crate::disable;
 
 use crate::Route;
@@ -30,9 +30,9 @@ pub fn Signup() -> Element {
                 a {
                     class: "is-bordered",
                     onclick: move |_| async move {
-                        let a = user_make().await.unwrap();
+                        let user_id = user_make().await.unwrap();
                         db_save().await.unwrap();
-                        id.set(a.id.to_string());
+                        id.set(user_id.to_string());
                     },
                     "Generate"
                 }
