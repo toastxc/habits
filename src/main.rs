@@ -64,7 +64,7 @@ fn NotFound(segments: Vec<String>) -> Element {
 pub fn Intro() -> Element {
     rsx! {
 
-        h1 { "Habbits" }
+        h1 { "Habits" }
         h4 {
             Link { to: Route::Signup {}, "Signup" }
         }
