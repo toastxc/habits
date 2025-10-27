@@ -108,6 +108,18 @@ backdrop-filter: blur(1px);
 }
 
 
+.bx-grey {
+      background-color: grey;
+       border: solid 2px  white;
+        margin: 3px;
+}
+
+.bx-gray {
+      background-color: grey;
+       border: solid 2px  white;
+        margin: 3px;
+}
+
 
 /* 25 + 35 * (boxes - 1) = box width */
 .bx-w1 {

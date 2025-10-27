@@ -10,8 +10,6 @@ use crate::backend::DateInfo;
 use crate::backend::Habit;
 use crate::components::field::TextInput;
 use crate::components::DaysOfWeek;
-
-use crate::notfoundempty;
 use crate::pages::errors::InternalServerError;
 use crate::pages::errors::NotFound;
 use crate::Route;
@@ -31,7 +29,7 @@ pub fn U(id: u32) -> Element {
         Some(Ok(None)) => {
             return rsx!(NotFound {
                 thing: Some("User".to_string()),
-                id: Some("id".to_string())
+                id: Some(id.to_string())
             })
         }
         Some(Err(error)) => {
@@ -131,6 +129,7 @@ fn Week(habit: Habit, date_info: DateInfo, user_id: u32, habit_id: u32) -> Eleme
                 date: days[x],
                 habit_id,
                 user_id,
+                current_day: date_info.days_since_epoch
             }
         }
     });
@@ -141,7 +140,7 @@ fn Week(habit: Habit, date_info: DateInfo, user_id: u32, habit_id: u32) -> Eleme
         div { class: "boxes",
 
             div {
-                p { class: "box", style: "width:70px;", {habit.name.clone()} }
+                h5 { class: "box", style: "width:70px;", {habit.name.clone()} }
             }
 
 
@@ -151,23 +150,34 @@ fn Week(habit: Habit, date_info: DateInfo, user_id: u32, habit_id: u32) -> Eleme
     }
 }
 
-#[component]
-fn Boxer(value: Signal<bool>, date: u32, habit_id: u32, user_id: u32) -> Element {
-    let bool_value = *value.read();
-    let mut class = use_signal(|| {
-        if *value.read() {
+
+fn box_color(date: u32, value: Signal<bool>, current_day: u32)  -> &'static str {
+      if *value.read() {
             "box  bx-fill"
         } else {
-            "box bx-line"
+            if date == current_day {
+                "box bx-grey"
+            } else {
+                "box bx-line"
+            }
         }
+}
+
+#[component]
+fn Boxer(value: Signal<bool>, date: u32, habit_id: u32, user_id: u32, current_day: u32) -> Element {
+    let bool_value = *value.read();
+    let mut class = use_signal(|| {
+
+      box_color(date, value, current_day)
     });
+
     rsx! {
         a {
             class,
             onclick: move |_| {
                 async move {
                     value.set(!bool_value);
-                    class.set(if *value.read() { "box  bx-fill" } else { "box bx-line" });
+                    class.set(   box_color(date, value, current_day));
                     entry_toggle(habit_id, date).await.unwrap();
                     db_save().await.unwrap();
                 }
