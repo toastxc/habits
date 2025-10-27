@@ -5,40 +5,43 @@ use dioxus_free_icons::{
 };
 
 use crate::{
-    backend::{user::user_get, Habit},
+    backend::{
+        middle::{date_get, entries_get, habits_get},
+        Habit,
+    },
     components::DaysOfWeek,
     Route,
 };
 
 #[component]
 pub fn Month(id: u32) -> Element {
-    let Some(Some(user)) = use_resource(move || async move { user_get(id).await.unwrap() })
+    let Some((date_info, habits)) =
+        use_resource(
+            move || async move { (date_get().await.unwrap(), habits_get(id).await.unwrap()) },
+        )
         .read_unchecked()
         .clone()
     else {
-        return rsx! {
-            h1 { "404" }
-        };
+        return rsx! { "loading..." };
     };
-    let user = use_signal(|| user);
 
-    // let mut user = user.clone();
+    let month_start = date_info.start_of_this_week - 21;
 
-    let habits_rendered = user.read().clone().habits.into_iter().map(|(name, habit)| {
-        let month = (0..4).map(|day| {
-            // let habits_rendered = Date::Cu .map(|(name, habit)| {
-            rsx! {
+    let habits = use_signal(|| habits);
 
-                Week { date: day, habit: habit.clone() }
-            }
-        });
+    let habits_rendered = habits.read().clone().into_iter().map(|(habit_id, habit)| {
+        //    date_info.
+        let month = rsx! {
+
+            Week { date: month_start, habit: habit.clone(), habit_id }
+        };
 
         rsx! {
 
 
 
             div { class: "boxes",
-                p { class: "box", {name} }
+                p { class: "box", {habit.name.clone()} }
             }
 
             DaysOfWeek { offset: false }
@@ -52,7 +55,7 @@ pub fn Month(id: u32) -> Element {
 
 
 
-        div { class: "boxes",
+        div { class: "boxes foot",
             div { class: "box bx-line is-disabled",
                 Icon { icon: FaPlus }
             }
@@ -71,23 +74,34 @@ pub fn Month(id: u32) -> Element {
 }
 
 #[component]
-fn Week(date: u32, habit: Habit) -> Element {
+fn Week(date: u32, habit: Habit, habit_id: u32) -> Element {
+    let Some(mut entries) = use_resource(move || async move {
+        let days = (0..28).map(|day| day + date).collect();
+
+        entries_get(habit_id, days)
+            .await
+            .unwrap()
+            .into_iter()
+            .map(|value| {
+                rsx! {
+                    BoxerNon { value }
+                }
+            })
+            .collect::<Vec<_>>()
+    })
+    .read_unchecked()
+    .clone() else {
+        return rsx! {};
+    };
+
     rsx! {
 
-
-        div { class: "boxes",
-
-            div {
-                // p { class: "box", style: "width:70px;", {habit.name} }
-            }
-
-            BoxerNon { value: false }
-            BoxerNon { value: false }
-            BoxerNon { value: false }
-            BoxerNon { value: false }
-            BoxerNon { value: false }
-            BoxerNon { value: false }
-            BoxerNon { value: false }
+        div { class: "boxes", style: "flex-wrap: wrap;",
+            {(0..7).map(|_| entries.remove(0))}
+            {(0..7).map(|_| entries.remove(0))}
+            {(0..7).map(|_| entries.remove(0))}
+            {(0..7).map(|_| entries.remove(0))}
+        
         }
     }
 }
@@ -96,6 +110,6 @@ fn Week(date: u32, habit: Habit) -> Element {
 fn BoxerNon(value: bool) -> Element {
     let class = use_signal(|| if value { "box  bx-fill" } else { "box bx-line" });
     rsx! {
-        a { class }
+        a { class, style: "width: 12.88%;" }
     }
 }

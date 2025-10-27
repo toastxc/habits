@@ -56,7 +56,7 @@ pub fn Edit(id: u32) -> Element {
 
         {rendered}
 
-        div { class: "boxes",
+        div { class: "boxes foot",
             div { class: "box bx-line is-disabled",
                 Icon { icon: FaPlus }
             }

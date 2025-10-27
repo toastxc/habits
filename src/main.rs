@@ -5,8 +5,9 @@ mod pages;
 use dioxus::prelude::*;
 
 use pages::edit::Edit;
+use pages::errors::NotFoundPage;
 use pages::login::Login;
-// use pages::month::Month;
+use pages::month::Month;
 use pages::signup::Signup;
 use pages::u::U;
 
@@ -22,12 +23,12 @@ enum Route {
     Login {},
     #[route("/u/:id")]
     U { id: u32 },
-    // #[route("/u/:id/month")]
-    // Month { id: u32 },
+    #[route("/u/:id/month")]
+    Month { id: u32 },
     #[route("/u/:id/edit")]
     Edit { id: u32 },
     #[route("/:..segments")]
-    NotFound { segments: Vec<String> },
+    NotFoundPage { segments: Vec<String> },
 }
 
 // const FAVICON: Asset = asset!("/assets/favicon.ico");
@@ -47,43 +48,6 @@ fn App() -> Element {
             content: "width=device-width, initial-scale=1.0",
         }
         Router::<Route> {}
-    }
-}
-
-#[component]
-fn NotFound(segments: Vec<String>) -> Element {
-    if segments.len() == 1 {
-        rsx! {
-            h1 { "404 :/" }
-            h3 { "Couldn't find resource \"{segments[0]}\"" }
-            Link { to: Route::Home {}, class: "",
-                h3 { class: "is-bordered", "Home" }
-            }
-        }
-    } else if segments.len() == 2 {
-        rsx! {
-            h1 { "404 :/" }
-            h3 { "Couldn't find {segments[0]} \"{segments[1]}\"" }
-            Link { to: Route::Home {}, class: "",
-                h3 { class: "is-bordered", "Home" }
-            }
-        }
-    } else {
-        rsx! {
-            h1 { "404 :/" }
-        }
-    }
-}
-
-pub fn notfoundprop<T: ToString, D: ToString>(thing: T, id: D) -> Element {
-    rsx! {
-        NotFound { segments: vec![thing.to_string(), id.to_string()] }
-    }
-}
-
-pub fn notfoundempty() -> Element {
-    rsx! {
-        NotFound { segments: vec![] }
     }
 }
 

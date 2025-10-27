@@ -15,6 +15,7 @@ use crate::pages::errors::NotFound;
 use crate::Route;
 use dioxus::logger::tracing::warn;
 use dioxus::prelude::*;
+use dioxus_free_icons::icons::fa_solid_icons::FaMaximize;
 use dioxus_free_icons::icons::fa_solid_icons::FaPenToSquare;
 use dioxus_free_icons::icons::fa_solid_icons::FaPlus;
 use dioxus_free_icons::Icon;
@@ -27,10 +28,9 @@ pub fn U(id: u32) -> Element {
     {
         Some(Ok(Some(user))) => user,
         Some(Ok(None)) => {
-            return rsx!(NotFound {
-                thing: Some("User".to_string()),
-                id: Some(id.to_string())
-            })
+            return rsx!(
+                NotFound { thing: Some("User".to_string()), id: Some(id.to_string()) }
+            )
         }
         Some(Err(error)) => {
             return rsx! {
@@ -78,7 +78,8 @@ pub fn U(id: u32) -> Element {
         DaysOfWeek { offset: true }
         {habits_rendered}
 
-        div { class: "boxes",
+
+        div { class: "boxes foot",
             a {
                 class: "box bx-line",
                 onclick: move |_| { dialog_open.set(true) },
@@ -90,10 +91,9 @@ pub fn U(id: u32) -> Element {
                 Icon { icon: FaPenToSquare }
             }
 
-
-
-
-
+            Link { to: Route::Month { id }, class: "box bx-line",
+                Icon { icon: FaMaximize }
+            }
         }
     }
 }
@@ -129,7 +129,7 @@ fn Week(habit: Habit, date_info: DateInfo, user_id: u32, habit_id: u32) -> Eleme
                 date: days[x],
                 habit_id,
                 user_id,
-                current_day: date_info.days_since_epoch
+                current_day: date_info.days_since_epoch,
             }
         }
     });
@@ -145,31 +145,24 @@ fn Week(habit: Habit, date_info: DateInfo, user_id: u32, habit_id: u32) -> Eleme
 
 
             {boxes_rendered}
-
         }
     }
 }
 
-
-fn box_color(date: u32, value: Signal<bool>, current_day: u32)  -> &'static str {
-      if *value.read() {
-            "box  bx-fill"
-        } else {
-            if date == current_day {
-                "box bx-grey"
-            } else {
-                "box bx-line"
-            }
-        }
+fn box_color(date: u32, value: Signal<bool>, current_day: u32) -> &'static str {
+    if *value.read() {
+        "box  bx-fill"
+    } else if date == current_day {
+        "box bx-grey"
+    } else {
+        "box bx-line"
+    }
 }
 
 #[component]
 fn Boxer(value: Signal<bool>, date: u32, habit_id: u32, user_id: u32, current_day: u32) -> Element {
     let bool_value = *value.read();
-    let mut class = use_signal(|| {
-
-      box_color(date, value, current_day)
-    });
+    let mut class = use_signal(|| box_color(date, value, current_day));
 
     rsx! {
         a {
@@ -177,7 +170,7 @@ fn Boxer(value: Signal<bool>, date: u32, habit_id: u32, user_id: u32, current_da
             onclick: move |_| {
                 async move {
                     value.set(!bool_value);
-                    class.set(   box_color(date, value, current_day));
+                    class.set(box_color(date, value, current_day));
                     entry_toggle(habit_id, date).await.unwrap();
                     db_save().await.unwrap();
                 }

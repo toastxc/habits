@@ -109,16 +109,12 @@ backdrop-filter: blur(1px);
 
 
 .bx-grey {
-      background-color: grey;
-       border: solid 2px  white;
+      background-color: black;
+       border: dashed 2px  white;
         margin: 3px;
 }
 
-.bx-gray {
-      background-color: grey;
-       border: solid 2px  white;
-        margin: 3px;
-}
+
 
 
 /* 25 + 35 * (boxes - 1) = box width */
@@ -213,13 +209,43 @@ backdrop-filter: blur(1px);
   margin-top: -22px; 
 }
 
+.foot {
+  position: absolute;
+  bottom: 10px;
+
+
+    width: 700px;
+    margin: auto;
+} 
+
+
+.sizeboxes {
+flex-wrap: wrap;
+display: flex;
+}
+
+.sizebox {
+    height: 25px;
+    margin: 5px;
+     display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 12.88%;
+}
+
 
 @media only screen and (max-width: 700px) {
-    body{
+    body {
         margin: auto;
         width: 90%;
     }
     
+
+    .foot {
+        margin: auto;
+        width: 90%;
+    }
+
     
 }
 
@@ -237,3 +263,7 @@ backdrop-filter: blur(1px);
     
     
 }
+
+
+
+
