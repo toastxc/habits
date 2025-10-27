@@ -45,7 +45,7 @@ fn App() -> Element {
         document::Link { rel: "stylesheet", href: EBOOK_CSS }
         meta {
             name: "viewport",
-            content: "width=device-width, initial-scale=1.0",
+            content: "width=device-width, initial-scale=1.25",
         }
         Router::<Route> {}
     }

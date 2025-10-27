@@ -235,16 +235,28 @@ display: flex;
 
 
 @media only screen and (max-width: 700px) {
-    body {
-        margin: auto;
-        width: 90%;
+
+
+    .box {
+        height: 40px;
     }
-    
+
 
     .foot {
         margin: auto;
-        width: 90%;
+        width: 100%;
     }
+
+    body {
+
+        margin: auto;
+        margin-left: 0px;
+        margin-right: 0px;
+        width: 100%;
+    }
+    
+
+    
 
     
 }
