@@ -12,7 +12,8 @@ use crate::components::field::TextInput;
 use crate::components::DaysOfWeek;
 
 use crate::notfoundempty;
-use crate::notfoundprop;
+use crate::pages::errors::InternalServerError;
+use crate::pages::errors::NotFound;
 use crate::Route;
 use dioxus::logger::tracing::warn;
 use dioxus::prelude::*;
@@ -22,11 +23,23 @@ use dioxus_free_icons::Icon;
 
 #[component]
 pub fn U(id: u32) -> Element {
-    let Some(Some(user)) = use_resource(move || async move { user_get(id).await.unwrap() })
+    let user = match use_resource(move || async move { user_get(id).await })
         .read_unchecked()
         .clone()
-    else {
-        return notfoundprop("User", id);
+    {
+        Some(Ok(Some(user))) => user,
+        Some(Ok(None)) => {
+            return rsx!(NotFound {
+                thing: Some("User".to_string()),
+                id: Some("id".to_string())
+            })
+        }
+        Some(Err(error)) => {
+            return rsx! {
+                InternalServerError { error }
+            }
+        }
+        None => return rsx! { "loading..." },
     };
 
     let Some((date_info, habits)) =
@@ -36,7 +49,7 @@ pub fn U(id: u32) -> Element {
         .read_unchecked()
         .clone()
     else {
-        return notfoundempty();
+        return rsx! { "loading..." };
     };
 
     let user = use_signal(|| user);
@@ -78,29 +91,17 @@ pub fn U(id: u32) -> Element {
             Link { to: Route::Edit { id }, class: "box bx-line",
                 Icon { icon: FaPenToSquare }
             }
-        
 
 
 
-        // Link { to: Route::Month { id }, class: "box bx-line",
-        //     Icon { icon: FaExpand }
-        // }
+
+
         }
     }
 }
 
 #[component]
 fn Week(habit: Habit, date_info: DateInfo, user_id: u32, habit_id: u32) -> Element {
-    // let e = (0..7)
-    //     .map(|day| day + date_info.start_of_this_week)
-    //     .collect();
-
-    // let entries: Vec<_> = entries_get(habit_id, e)
-    //     .await
-    //     .unwrap()
-    //     .map(|a| use_signal(|| a))
-    //     .collect();
-
     let days: Vec<_> = (0..7)
         .map(|day| day + date_info.start_of_this_week)
         .collect();
@@ -121,8 +122,6 @@ fn Week(habit: Habit, date_info: DateInfo, user_id: u32, habit_id: u32) -> Eleme
     .clone() else {
         return rsx! {};
     };
-
-    // let vec = entries_get(habit_id, );
 
     let boxes_rendered = (0..7).map(|x| {
         rsx! {
@@ -147,7 +146,7 @@ fn Week(habit: Habit, date_info: DateInfo, user_id: u32, habit_id: u32) -> Eleme
 
 
             {boxes_rendered}
-        
+
         }
     }
 }
