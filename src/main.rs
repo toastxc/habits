@@ -35,6 +35,8 @@ enum Route {
 const EBOOK_CSS: Asset = asset!("/assets/ebook.css");
 
 fn main() {
+     #[cfg(not(feature = "server"))]
+    server_fn::client::set_server_url("https://habits.toastxc.xyz");
     dioxus::launch(App);
 }
 
