@@ -96,13 +96,20 @@ fn Week(date: u32, habit: Habit, habit_id: u32) -> Element {
 
     rsx! {
 
-        div { class: "boxes", style: "flex-wrap: wrap;",
+        div { class: "boxes", 
             {(0..7).map(|_| entries.remove(0))}
+    }
+     div { class: "boxes", 
             {(0..7).map(|_| entries.remove(0))}
+    }
+     div { class: "boxes", 
             {(0..7).map(|_| entries.remove(0))}
+    }
+     div { class: "boxes", 
             {(0..7).map(|_| entries.remove(0))}
-        
-        }
+    }
+
+    
     }
 }
 
