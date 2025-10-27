@@ -1,5 +1,5 @@
 [package]
-name = "habbits"
+name = "habits"
 version = "0.1.0"
 authors = ["ToastXC <100072983+toastxc@users.noreply.github.com>"]
 edition = "2021"
