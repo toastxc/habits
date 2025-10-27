@@ -3,8 +3,8 @@ use std::ops::Deref;
 use dioxus::prelude::*;
 // use dioxus_free_icons::{};
 
-use crate::{backend::middle::user_get, components::field::TextInput, Route};
-
+use crate::disable;
+use crate::{components::field::TextInput, Route};
 #[component]
 pub fn Login() -> Element {
     let id = use_signal(|| "".to_string());
@@ -15,13 +15,14 @@ pub fn Login() -> Element {
             to: Route::U {
                 id: id.read().deref().parse::<u32>().unwrap_or_default(),
             },
-            class: "is-bordered",
+            class: "is-bordered {disable(id.read().deref().parse::<u32>().is_ok())}",
             "Go"
         }
     };
 
     rsx! {
 
+        h2 { "Enter your code:" }
 
         TextInput { text: id, button }
 
@@ -33,15 +34,5 @@ pub fn Login() -> Element {
 
 
         br {}
-
-
-
-        a {
-            class: "is-underlined",
-            onclick: move |_| async move {
-                let _ = user_get(0).await;
-            },
-            "aaa"
-        }
     }
 }

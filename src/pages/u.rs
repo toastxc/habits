@@ -8,33 +8,37 @@ use crate::backend::middle::user_get;
 use crate::backend::DateInfo;
 // use crate::backend::user;
 use crate::backend::Habit;
-use crate::backend::User;
 use crate::components::field::TextInput;
 use crate::components::DaysOfWeek;
+
+use crate::notfoundempty;
+use crate::notfoundprop;
 use crate::Route;
-use dioxus::html::b;
 use dioxus::logger::tracing::warn;
 use dioxus::prelude::*;
-use dioxus_free_icons::icons::fa_solid_icons::FaExpand;
 use dioxus_free_icons::icons::fa_solid_icons::FaPenToSquare;
 use dioxus_free_icons::icons::fa_solid_icons::FaPlus;
 use dioxus_free_icons::Icon;
 
 #[component]
 pub fn U(id: u32) -> Element {
-    let Some((Some(user), date_info, habits)) = use_resource(move || async move {
-        (
-            user_get(id).await.unwrap(),
-            date_get().await.unwrap(),
-            habits_get(id).await.unwrap(),
-        )
-    })
-    .read_unchecked()
-    .clone() else {
-        return rsx! {
-            h1 { "404" }
-        };
+    let Some(Some(user)) = use_resource(move || async move { user_get(id).await.unwrap() })
+        .read_unchecked()
+        .clone()
+    else {
+        return notfoundprop("User", id);
     };
+
+    let Some((date_info, habits)) =
+        use_resource(
+            move || async move { (date_get().await.unwrap(), habits_get(id).await.unwrap()) },
+        )
+        .read_unchecked()
+        .clone()
+    else {
+        return notfoundempty();
+    };
+
     let user = use_signal(|| user);
     let habits = use_signal(|| habits);
 
@@ -74,7 +78,7 @@ pub fn U(id: u32) -> Element {
             Link { to: Route::Edit { id }, class: "box bx-line",
                 Icon { icon: FaPenToSquare }
             }
-
+        
 
 
 
@@ -115,9 +119,7 @@ fn Week(habit: Habit, date_info: DateInfo, user_id: u32, habit_id: u32) -> Eleme
     })
     .read_unchecked()
     .clone() else {
-        return rsx! {
-            h1 { "404" }
-        };
+        return rsx! {};
     };
 
     // let vec = entries_get(habit_id, );
@@ -145,7 +147,7 @@ fn Week(habit: Habit, date_info: DateInfo, user_id: u32, habit_id: u32) -> Eleme
 
 
             {boxes_rendered}
-
+        
         }
     }
 }

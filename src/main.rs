@@ -30,7 +30,7 @@ enum Route {
     NotFound { segments: Vec<String> },
 }
 
-const FAVICON: Asset = asset!("/assets/favicon.ico");
+// const FAVICON: Asset = asset!("/assets/favicon.ico");
 const EBOOK_CSS: Asset = asset!("/assets/ebook.css");
 
 fn main() {
@@ -52,11 +52,38 @@ fn App() -> Element {
 
 #[component]
 fn NotFound(segments: Vec<String>) -> Element {
-    rsx! {
-        h1 { "404" }
-        Link { to: Route::Home {}, class: "",
-            h1 { class: "is-bordered", "Home" }
+    if segments.len() == 1 {
+        rsx! {
+            h1 { "404 :/" }
+            h3 { "Couldn't find resource \"{segments[0]}\"" }
+            Link { to: Route::Home {}, class: "",
+                h3 { class: "is-bordered", "Home" }
+            }
         }
+    } else if segments.len() == 2 {
+        rsx! {
+            h1 { "404 :/" }
+            h3 { "Couldn't find {segments[0]} \"{segments[1]}\"" }
+            Link { to: Route::Home {}, class: "",
+                h3 { class: "is-bordered", "Home" }
+            }
+        }
+    } else {
+        rsx! {
+            h1 { "404 :/" }
+        }
+    }
+}
+
+pub fn notfoundprop<T: ToString, D: ToString>(thing: T, id: D) -> Element {
+    rsx! {
+        NotFound { segments: vec![thing.to_string(), id.to_string()] }
+    }
+}
+
+pub fn notfoundempty() -> Element {
+    rsx! {
+        NotFound { segments: vec![] }
     }
 }
 
