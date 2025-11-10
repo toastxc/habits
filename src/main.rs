@@ -10,33 +10,50 @@ use pages::login::Login;
 use pages::month::Month;
 use pages::signup::Signup;
 use pages::u::U;
-
+use components::navbar::Navbar;
 pub mod backend;
 
 #[derive(Debug, Clone, Routable, PartialEq)]
+#[rustfmt::skip]
 enum Route {
+   
     #[route("/")]
     Home {},
     #[route("/signup")]
     Signup {},
     #[route("/login")]
     Login {},
-    #[route("/u/:id")]
-    U { id: u32 },
-    #[route("/u/:id/month")]
-    Month { id: u32 },
-    #[route("/u/:id/edit")]
-    Edit { id: u32 },
+   
     #[route("/:..segments")]
     NotFoundPage { segments: Vec<String> },
+
+
+    
+    #[nest("/u/:id")]
+        #[layout(Navbar)]
+
+
+            #[route("/")]
+            U { id: u32 },
+            #[route("/month")]
+            Month { id: u32 },
+            #[route("/edit")]
+            Edit { id: u32 },
+
+            // #[route("/u/:id")]
+            // U { id: u32 },
+            // #[route("/u/:id/month")]
+            // Month { id: u32 },
+            // #[route("/u/:id/edit")]
+            // Edit { id: u32 },
 }
 
 // const FAVICON: Asset = asset!("/assets/favicon.ico");
 const EBOOK_CSS: Asset = asset!("/assets/ebook.css");
 
 fn main() {
-     #[cfg(not(feature = "server"))]
-    server_fn::client::set_server_url("https://habits.toastxc.xyz");
+    //  #[cfg(not(feature = "server"))]
+    // server_fn::client::set_server_url("https://habits.toastxc.xyz");
     
     dioxus::launch(App);
 }
@@ -46,10 +63,7 @@ fn App() -> Element {
     rsx! {
         // document::Link { rel: "icon", href: FAVICON }
         document::Link { rel: "stylesheet", href: EBOOK_CSS }
-        meta {
-            name: "viewport",
-            content: "width=device-width, initial-scale=1",
-        }
+        meta { name: "viewport", content: "width=device-width, initial-scale=1" }
         Router::<Route> {}
     }
 }

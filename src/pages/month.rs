@@ -38,8 +38,6 @@ pub fn Month(id: u32) -> Element {
 
         rsx! {
 
-
-
             div { class: "boxes",
                 p { class: "box", {habit.name.clone()} }
             }
@@ -51,25 +49,15 @@ pub fn Month(id: u32) -> Element {
 
     rsx! {
 
-        {habits_rendered}
 
+   
 
-
-        div { class: "boxes foot",
-            div { class: "box bx-line is-disabled",
-                Icon { icon: FaPlus }
-            }
-
-
-            div { class: "box bx-line is-disabled",
-                Icon { icon: FaPenToSquare }
-            }
-
-
-            Link { to: Route::U { id }, class: "box bx-line ",
-                Icon { icon: FaMinimize }
-            }
-        }
+       
+    
+        div { class:"scroller", id:"aa", {habits_rendered} }
+        br{}
+         
+           
     }
 }
 

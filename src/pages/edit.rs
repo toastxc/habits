@@ -55,21 +55,5 @@ pub fn Edit(id: u32) -> Element {
 
 
         {rendered}
-
-        div { class: "boxes foot",
-            div { class: "box bx-line is-disabled",
-                Icon { icon: FaPlus }
-            }
-
-
-            Link { to: Route::U { id }, class: "box bx-line",
-                Icon { icon: FaHouse }
-            }
-
-
-            div { class: "box bx-line is-disabled",
-                Icon { icon: FaExpand }
-            }
-        }
     }
 }

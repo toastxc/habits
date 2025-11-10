@@ -1,5 +1,5 @@
 pub mod field;
-
+pub mod navbar;
 use dioxus::prelude::*;
 
 #[component]

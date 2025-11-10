@@ -77,24 +77,6 @@ pub fn U(id: u32) -> Element {
         br {}
         DaysOfWeek { offset: true }
         {habits_rendered}
-
-
-        div { class: "boxes foot",
-            a {
-                class: "box bx-line",
-                onclick: move |_| { dialog_open.set(true) },
-                Icon { icon: FaPlus }
-            }
-
-
-            Link { to: Route::Edit { id }, class: "box bx-line",
-                Icon { icon: FaPenToSquare }
-            }
-
-            Link { to: Route::Month { id }, class: "box bx-line",
-                Icon { icon: FaMaximize }
-            }
-        }
     }
 }
 
