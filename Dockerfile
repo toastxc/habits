@@ -17,11 +17,12 @@ RUN cargo binstall dioxus-cli --root /.cargo -y --force --locked
 ENV PATH="/.cargo/bin:$PATH"
 
 # Create the final bundle folder. Bundle always executes in release mode with optimizations enabled
-RUN dx bundle --platform web
+RUN dx bundle --platform web --release
 
 FROM chef AS runtime
+RUN echo "aa"
 COPY --from=builder /app/target/dx/habits/release/web/ /usr/local/app
-
+RUN ls /usr/local/app/
 # set our port and make sure to listen for all connections
 ENV PORT=8080
 ENV IP=0.0.0.0
@@ -30,4 +31,4 @@ ENV IP=0.0.0.0
 EXPOSE 8080
 
 WORKDIR /usr/local/app
-ENTRYPOINT [ "/usr/local/app/server" ]
+ENTRYPOINT [ "/usr/local/app/habits" ]

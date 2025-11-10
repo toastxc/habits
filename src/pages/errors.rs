@@ -4,29 +4,27 @@ use crate::Route;
 #[component]
 pub fn NotFound(thing: Option<String>, id: Option<String>) -> Element {
     match (thing, id) {
-        (Some(thing), None) => rsx!(
-            Generic {
-                e_code: "Not Found",
-                e_message: "Couldn't find resource \"{thing}\"",
-            }
-        ),
-        (Some(thing), Some(id)) => rsx!(
-            Generic {
-                e_code: "Not Found",
-                e_message: "Couldn't find {thing} \"{id}\"",
-            }
-        ),
-        _ => rsx!(
-            Generic { e_code: "Not Found", e_message: "" }
-        ),
+        (Some(thing), None) => rsx!(Generic {
+            e_code: "Not Found",
+            e_message: "Couldn't find resource \"{thing}\"",
+        }),
+        (Some(thing), Some(id)) => rsx!(Generic {
+            e_code: "Not Found",
+            e_message: "Couldn't find {thing} \"{id}\"",
+        }),
+        _ => rsx!(Generic {
+            e_code: "Not Found",
+            e_message: ""
+        }),
     }
 }
 
 #[component]
 pub fn InternalServerError(error: ServerFnError) -> Element {
-    rsx!(
-        Generic { e_code: "Internal Server Error", e_message: error.to_string() }
-    )
+    rsx!(Generic {
+        e_code: "Internal Server Error",
+        e_message: error.to_string()
+    })
 }
 
 #[component]

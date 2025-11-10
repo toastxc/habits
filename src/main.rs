@@ -4,13 +4,13 @@ mod pages;
 
 use dioxus::prelude::*;
 
+use components::navbar::Navbar;
 use pages::edit::Edit;
 use pages::errors::NotFoundPage;
 use pages::login::Login;
 use pages::month::Month;
 use pages::signup::Signup;
 use pages::u::U;
-use components::navbar::Navbar;
 pub mod backend;
 
 #[derive(Debug, Clone, Routable, PartialEq)]
@@ -54,7 +54,7 @@ const EBOOK_CSS: Asset = asset!("/assets/ebook.css");
 fn main() {
     //  #[cfg(not(feature = "server"))]
     // server_fn::client::set_server_url("https://habits.toastxc.xyz");
-    
+
     dioxus::launch(App);
 }
 

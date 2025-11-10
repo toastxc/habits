@@ -48,16 +48,8 @@ pub fn Month(id: u32) -> Element {
     });
 
     rsx! {
-
-
-   
-
-       
-    
-        div { class:"scroller", id:"aa", {habits_rendered} }
-        br{}
-         
-           
+        div { class: "scroller", id: "aa", {habits_rendered} }
+        br {}
     }
 }
 

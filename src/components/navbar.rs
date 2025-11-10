@@ -1,19 +1,24 @@
-
 use dioxus::prelude::*;
-use dioxus_free_icons::{Icon, icons::fa_solid_icons::{FaHouseChimney, FaMaximize, FaPenToSquare, FaPlus}};
+use dioxus_free_icons::{
+    icons::fa_solid_icons::{FaHouseChimney, FaMaximize, FaPenToSquare, FaPlus},
+    Icon,
+};
 
-use crate::{Route, backend::{ middle::{db_save, habit_make}}, components::field::TextInput};
-
-
+use crate::{
+    backend::middle::{db_save, habit_make},
+    components::field::TextInput,
+    Route,
+};
 
 #[component]
 pub fn Navbar(id: u32) -> Element {
+    let width = 30;
+    let height = 30;
 
-    
     let mut dialog_open = use_signal(|| false);
 
     let class = "box bx-line bx-black";
-    rsx!{
+    rsx! {
 
         if dialog_open() {
             Dialog { open: dialog_open, user_id: id }
@@ -24,28 +29,24 @@ pub fn Navbar(id: u32) -> Element {
 
         div { class: "boxes foot",
             a { class, onclick: move |_| { dialog_open.set(true) },
-                Icon { icon: FaPlus }
+                Icon { width, height, icon: FaPlus }
             }
 
 
             Link { to: Route::U { id }, class,
-                Icon { icon: FaHouseChimney }
+                Icon { icon: FaHouseChimney, width, height }
             }
 
             Link { to: Route::Edit { id }, class,
-                Icon { icon: FaPenToSquare }
+                Icon { width, height, icon: FaPenToSquare }
             }
 
             Link { to: Route::Month { id }, class,
-                Icon { icon: FaMaximize }
+                Icon { width, height, icon: FaMaximize }
             }
         }
     }
-
-
-    
 }
-
 
 #[component]
 fn Dialog(open: Signal<bool>, user_id: u32) -> Element {
