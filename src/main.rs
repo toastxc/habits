@@ -37,6 +37,7 @@ const EBOOK_CSS: Asset = asset!("/assets/ebook.css");
 fn main() {
      #[cfg(not(feature = "server"))]
     server_fn::client::set_server_url("https://habits.toastxc.xyz");
+    
     dioxus::launch(App);
 }
 
@@ -47,7 +48,7 @@ fn App() -> Element {
         document::Link { rel: "stylesheet", href: EBOOK_CSS }
         meta {
             name: "viewport",
-            content: "width=device-width, initial-scale=1.25",
+            content: "width=device-width, initial-scale=1",
         }
         Router::<Route> {}
     }
