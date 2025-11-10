@@ -2,6 +2,9 @@ pub mod field;
 pub mod navbar;
 use dioxus::prelude::*;
 
+pub const width: u32 = 30;
+pub const height: u32 = 30;
+
 #[component]
 pub fn DaysOfWeek(offset: bool) -> Element {
     rsx! {

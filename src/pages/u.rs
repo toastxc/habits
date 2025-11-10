@@ -28,10 +28,9 @@ pub fn U(id: u32) -> Element {
     {
         Some(Ok(Some(user))) => user,
         Some(Ok(None)) => {
-            return rsx!(NotFound {
-                thing: Some("User".to_string()),
-                id: Some(id.to_string())
-            })
+            return rsx!(
+                NotFound { thing: Some("User".to_string()), id: Some(id.to_string()) }
+            )
         }
         Some(Err(error)) => {
             return rsx! {

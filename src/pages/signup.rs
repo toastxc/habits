@@ -4,8 +4,8 @@ use std::ops::Deref;
 
 use crate::backend::middle::db_save;
 use crate::backend::middle::user_make;
+use crate::components::{height, width};
 use crate::disable;
-
 use crate::Route;
 #[component]
 pub fn Signup() -> Element {
@@ -17,7 +17,12 @@ pub fn Signup() -> Element {
     flex-wrap: nowrap; space-evenly",
 
 
-            Icon { style: "padding: 5px;", icon: FaChevronRight }
+            Icon {
+                height,
+                width,
+                style: "padding: 5px;",
+                icon: FaChevronRight,
+            }
             input {
                 class: "input is-underlined {disable(false)}",
                 r#type: "text",

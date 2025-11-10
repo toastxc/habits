@@ -1,3 +1,4 @@
+use crate::components::{height, width};
 use dioxus::prelude::*;
 use dioxus_free_icons::{
     icons::fa_solid_icons::{FaHouseChimney, FaMaximize, FaPenToSquare, FaPlus},
@@ -12,9 +13,6 @@ use crate::{
 
 #[component]
 pub fn Navbar(id: u32) -> Element {
-    let width = 30;
-    let height = 30;
-
     let mut dialog_open = use_signal(|| false);
 
     let class = "box bx-line bx-black";
